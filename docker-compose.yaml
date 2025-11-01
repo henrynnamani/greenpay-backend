@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: mongo_greenpay
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: graey
+      MONGO_INITDB_ROOT_PASSWORD: pyr@hornet0101
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - greenpay_network
+
+volumes:
+  mongo_data:
+
+networks:
+  greenpay_network:
+    driver: bridge
