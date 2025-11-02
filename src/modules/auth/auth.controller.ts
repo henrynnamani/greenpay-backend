@@ -1,11 +1,11 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './provider/auth.service';
-import { AuthDto } from './dto/signup.dto';
+import { RegisterDto } from './dto/signup.dto';
 import { UsersService } from '../users/provider/users.service';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as SYS_MSG from '@/shared/system-message';
+import { LoginDto } from './dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,16 +16,14 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async signup(@Body() signupDto: AuthDto) {
-    const { email, password } = signupDto;
+  async signup(@Body() signupDto: RegisterDto) {
+    const { password } = signupDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userService.createUser({
-      email,
+      ...signupDto,
       password: hashedPassword,
     });
-
-    await user.save();
 
     const token = this.jwtService.sign(
       { id: user.id },
@@ -36,12 +34,13 @@ export class AuthController {
     );
 
     return {
+      user,
       token,
     };
   }
 
   @Post('signin')
-  async signin(@Body() signinDto: AuthDto) {
+  async signin(@Body() signinDto: LoginDto) {
     const { email, password } = signinDto;
 
     const user = await this.userService.findUserByEmail(email);
@@ -54,6 +53,6 @@ export class AuthController {
 
     const token = this.jwtService.sign({ id: user.id });
 
-    return { token };
+    return { user, token };
   }
 }

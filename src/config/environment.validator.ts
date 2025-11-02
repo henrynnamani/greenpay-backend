@@ -8,6 +8,7 @@ export const envSchema = z.object({
     message: 'JWT_EXPIRES must be in the format like "10m", "2h", or "7d"',
   }),
   OPENAI_API_KEY: z.string(),
+  COHERE_API_KEY: z.string(),
   CELO_NODE_URL: z.string(),
 });
 

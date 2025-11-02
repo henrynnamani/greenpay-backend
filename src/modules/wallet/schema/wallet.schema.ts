@@ -8,9 +8,6 @@ export class Wallet extends Document {
 
   @Prop({ required: false, unique: true })
   address: string;
-
-  @Prop({ required: false })
-  nonce: string;
 }
 
 export const WalletSchema = SchemaFactory.createForClass(Wallet);

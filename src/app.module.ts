@@ -9,6 +9,8 @@ import mongoConfig from './config/mongo.config';
 import { z } from 'zod';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { AiModule } from './modules/ai/ai.module';
+import aiConifg from './config/ai.config';
 
 @Module({
   imports: [
@@ -16,9 +18,10 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     UsersModule,
     ProjectsModule,
     TransactionsModule,
+    AiModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [jwtConfig, mongoConfig],
+      load: [jwtConfig, mongoConfig, aiConifg],
       validate: (config) => {
         const parsed = envSchema.safeParse(config);
         if (!parsed.success) {

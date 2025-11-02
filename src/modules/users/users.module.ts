@@ -3,9 +3,11 @@ import { UsersController } from './users.controller';
 import { UsersService } from './provider/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/users.schema';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
   imports: [
+    WalletModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [UsersController],

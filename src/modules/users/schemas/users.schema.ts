@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -9,23 +9,20 @@ export class User extends Document {
   @Prop()
   password?: string; // optional if using Web3 wallet login
 
-  @Prop({ unique: true, sparse: true })
-  walletAddress?: string; // Celo wallet address
+  @Prop({ ref: 'Wallet', type: Types.ObjectId, required: false })
+  walletId?: Types.ObjectId;
+
+  @Prop({ default: 5200 })
+  totalBalance?: number;
 
   @Prop({ default: 0 })
-  totalEmissions: number; // total kg CO₂ emitted
+  totalEmissions: number;
 
   @Prop({ default: 0 })
-  totalOffset: number; // total kg CO₂ offset
+  totalOffset: number;
 
   @Prop({ default: 0 })
-  greenPoints: number; // reward points earned
-
-  @Prop({ default: 'user' })
-  role: string; // e.g., "user", "admin"
-
-  @Prop({ default: false })
-  isVerified: boolean; // email or wallet verification status
+  greenPoints: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
