@@ -13,8 +13,6 @@ export class WalletService {
     try {
       const wallet = await this.walletModel.create({
         userId: user._id,
-        address: '',
-        nonce: 0,
       });
 
       return wallet;

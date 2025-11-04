@@ -6,7 +6,7 @@ export class Wallet extends Document {
   @Prop({ ref: 'User', type: Types.ObjectId, required: true })
   userId: Types.ObjectId;
 
-  @Prop({ required: false, unique: true })
+  @Prop({ required: false, unique: false })
   address: string;
 }
 

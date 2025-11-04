@@ -8,6 +8,7 @@ import { config } from 'dotenv';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../users/schemas/users.schema';
 import { UsersModule } from '../users/users.module';
+import { JwtStrategy } from './strategies/jwt.strategies';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

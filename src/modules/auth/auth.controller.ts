@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { RegisterDto } from './dto/signup.dto';
 import { UsersService } from '../users/provider/users.service';
 import * as bcrypt from 'bcryptjs';
@@ -6,6 +12,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as SYS_MSG from '@/shared/system-message';
 import { LoginDto } from './dto/signin.dto';
+import { SkipAuth } from './decorators/skip-auth.decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +23,7 @@ export class AuthController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @SkipAuth()
   @Post('signup')
   async signup(@Body() signupDto: RegisterDto) {
     const { password } = signupDto;
@@ -26,7 +35,7 @@ export class AuthController {
     });
 
     const token = this.jwtService.sign(
-      { id: user.id },
+      { sub: user.id },
       {
         secret: this.configService.get('jwt.secret'),
         expiresIn: this.configService.get('jwt.expires'),
@@ -39,6 +48,7 @@ export class AuthController {
     };
   }
 
+  @SkipAuth()
   @Post('signin')
   async signin(@Body() signinDto: LoginDto) {
     const { email, password } = signinDto;
@@ -51,8 +61,13 @@ export class AuthController {
       throw new UnauthorizedException(SYS_MSG.INVALID_CREDENTIAL);
     }
 
-    const token = this.jwtService.sign({ id: user.id });
+    const token = this.jwtService.sign({ sub: user.id });
 
     return { user, token };
+  }
+
+  @Get('me')
+  async profile(@CurrentUser() loggedInUser) {
+    return this.userService.userProfile(loggedInUser.sub);
   }
 }

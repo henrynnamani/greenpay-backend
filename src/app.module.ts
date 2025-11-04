@@ -11,6 +11,9 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { AiModule } from './modules/ai/ai.module';
 import aiConifg from './config/ai.config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { SavingsModule } from './modules/savings/savings.module';
 
 @Module({
   imports: [
@@ -19,6 +22,7 @@ import aiConifg from './config/ai.config';
     ProjectsModule,
     TransactionsModule,
     AiModule,
+    SavingsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig, mongoConfig, aiConifg],
@@ -40,6 +44,11 @@ import aiConifg from './config/ai.config';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

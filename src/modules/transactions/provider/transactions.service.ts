@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
   RequestTimeoutException,
@@ -9,9 +10,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Transaction } from '../schema/transaction.schema';
 import { Model } from 'mongoose';
 import { AiProvider } from '@/modules/ai/ai.interface';
-import { UsersService } from '@/modules/users/provider/users.service';
 import { User } from '@/modules/users/schemas/users.schema';
 import * as SYS_MSG from '@/shared/system-message';
+import { UsersService } from '@/modules/users/provider/users.service';
+import { DEDUCT_PURPOSE } from '@/constant';
 
 @Injectable()
 export class TransactionsService {
@@ -19,12 +21,12 @@ export class TransactionsService {
     @InjectModel(Transaction.name)
     private readonly transactionModel: Model<Transaction>,
     @Inject('AI_PROVIDER') private readonly aiProvider: AiProvider,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
   ) {}
 
-  async create(transactionDto: CreateTransactionDto) {
+  async create(transactionDto: CreateTransactionDto, userId: string) {
     try {
-      const userId = '69059e41ec545037e44ae327';
       const user = await this.usersService.findUserById(userId);
 
       await this.checkSufficientBalance(user, transactionDto.amount);
@@ -51,13 +53,19 @@ export class TransactionsService {
         payload.estimatedEmission,
       );
 
+      await this.usersService.deductUser(
+        userId,
+        transactionDto.amount,
+        DEDUCT_PURPOSE.TRANSACTION,
+      );
+
       return transaction.save();
     } catch (err) {
       throw new RequestTimeoutException(err);
     }
   }
 
-  async findUserTransactions(userId: string) {
+  async getTransactions(userId: string) {
     return this.transactionModel
       .find({ userId })
       .sort({ createdAt: -1 })
@@ -74,6 +82,28 @@ export class TransactionsService {
     } catch (err) {
       throw new RequestTimeoutException(err);
     }
+  }
+
+  async aggregateMonthlyTransaction(
+    id: string,
+    startOfMonth: any,
+    endOfMonth: any,
+  ) {
+    return await this.transactionModel.aggregate([
+      {
+        $match: {
+          userId: id,
+          createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: '$amount' },
+          totalEmissions: { $sum: '$estimatedEmission' },
+        },
+      },
+    ]);
   }
 
   //   async getUserCarbonSummary(userId: string) {
