@@ -14,6 +14,7 @@ import * as SYS_MSG from '@/shared/system-message';
 import { LoginDto } from './dto/signin.dto';
 import { SkipAuth } from './decorators/skip-auth.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { ConnectWalletDto } from './dto/connect-wallet.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -67,7 +68,15 @@ export class AuthController {
   }
 
   @Post('wallet')
-  async connectWallet() {}
+  async connectWallet(
+    @Body() connectWalletDto: ConnectWalletDto,
+    @CurrentUser() loggedInUser,
+  ) {
+    return this.userService.connectWallet(
+      loggedInUser.sub,
+      connectWalletDto.address,
+    );
+  }
 
   @Post('nonce')
   async generateNonce() {}

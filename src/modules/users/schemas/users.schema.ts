@@ -13,8 +13,8 @@ export class User extends Document {
   @Prop()
   password?: string; // optional if using Web3 wallet login
 
-  @Prop({ ref: 'Wallet', type: Types.ObjectId, required: false })
-  walletId?: Types.ObjectId;
+  @Prop({ required: false })
+  walletAddress: string;
 
   @Prop({ default: 0, required: false })
   totalBalance?: number;

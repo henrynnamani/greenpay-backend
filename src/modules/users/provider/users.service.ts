@@ -12,7 +12,6 @@ import { User } from '../schemas/users.schema';
 import { Model } from 'mongoose';
 import * as SYS_MSG from '@/shared/system-message';
 import { RegisterDto } from '@/modules/auth/dto/signup.dto';
-import { WalletService } from '@/modules/wallet/provider/wallet.service';
 import { AddMoneyDto } from '../dto/add-money.dto';
 import { TransactionsService } from '@/modules/transactions/provider/transactions.service';
 import { OffsetService } from '@/modules/offset/provider/offset.service';
@@ -22,7 +21,6 @@ import { DEDUCT_PURPOSE } from '@/constant';
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly walletService: WalletService,
     @Inject(forwardRef(() => TransactionsService))
     private readonly transactionService: TransactionsService,
     private readonly offsetService: OffsetService,
@@ -31,8 +29,6 @@ export class UsersService {
   async createUser(createUserDto: RegisterDto) {
     try {
       const user = await this.userModel.create(createUserDto);
-
-      await this.walletService.createUserWallet(user);
 
       return user.save();
     } catch (err) {
@@ -160,7 +156,6 @@ export class UsersService {
     const session = await this.userModel.startSession();
 
     try {
-
       (await session).startTransaction();
 
       const user = await this.userModel.findOne({ _id: id }).session(session);
@@ -191,6 +186,26 @@ export class UsersService {
     } catch (err) {
       await session.abortTransaction();
       session.endSession();
+      throw new RequestTimeoutException(err);
+    }
+  }
+
+  async connectWallet(loggedInUser: string, address: string) {
+    try {
+      const user = await this.userModel.findOneAndUpdate(
+        { _id: loggedInUser },
+        { $set: { walletAddress: address } },
+        { new: true },
+      );
+
+      if (!user) {
+        throw new NotFoundException(SYS_MSG.USER_NOT_FOUND);
+      }
+
+      return {
+        user,
+      };
+    } catch (err) {
       throw new RequestTimeoutException(err);
     }
   }
