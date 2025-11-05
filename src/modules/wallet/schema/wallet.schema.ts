@@ -7,6 +7,9 @@ export class Wallet extends Document {
   userId: Types.ObjectId;
 
   @Prop({ required: false, unique: false })
+  nonce: string;
+
+  @Prop({ required: false, unique: false })
   address: string;
 }
 

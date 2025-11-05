@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ProjectService } from './provider/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 

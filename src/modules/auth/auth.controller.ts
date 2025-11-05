@@ -66,6 +66,12 @@ export class AuthController {
     return { user, token };
   }
 
+  @Post('wallet')
+  async connectWallet() {}
+
+  @Post('nonce')
+  async generateNonce() {}
+
   @Get('me')
   async profile(@CurrentUser() loggedInUser) {
     return this.userService.userProfile(loggedInUser.sub);

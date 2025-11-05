@@ -1,0 +1,34 @@
+[
+    {
+        "name": "GreenSavannah Reforestation",
+        "description": "Planting native trees in Savanna regions to restore biomass and sequester CO2",
+        "contributors": 1200,
+        "priority": true,
+        "impact": "Nature-based removal; community job creation",
+        "address": "0x"
+    },
+    {
+        "name": "MangroveGuard Coastal Protection",
+        "description": "Protecting and restoring mangrove forests to absorb carbon and protect coastlines.",
+        "contributors": 950,
+        "priority": false,
+        "impact": "Blue-carbon; avoids coastal erosion",
+        "address": "0x"
+    },
+    {
+        "name": "SolarPower Rural Landfill Project",
+        "description": "Installing solar micro-grids in off-grid villages to replace diesel generators",
+        "contributors": 530,
+        "priority": false,
+        "impact": "Emission avoidance; renewable energy",
+        "address": "0x"
+    },
+    {
+        "name": "MethaneCapture Landfill Project",
+        "description": "Capturing methane from landfill waste and converting to energy, reducing GHG",
+        "contributors": 300,
+        "priority": false,
+        "impact": "High-impact methane removal; tech heavy",
+        "address": "0x"
+    }
+]
