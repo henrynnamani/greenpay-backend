@@ -152,7 +152,12 @@ export class UsersService {
     }
   }
 
-  async deductUser(id: string, amount: number, purpose: string) {
+  async deductUser(
+    id: string,
+    amount: number,
+    purpose: string,
+    offset?: number,
+  ) {
     const session = await this.userModel.startSession();
 
     try {
@@ -173,6 +178,9 @@ export class UsersService {
         case DEDUCT_PURPOSE.TRANSACTION:
           user.totalBalance! -= Math.abs(amount);
           break;
+        case DEDUCT_PURPOSE.OFFSET:
+          user.totalBalance! -= Math.abs(amount);
+          user.totalOffset += offset!;
         default:
           throw new BadRequestException(`Invalid purpose: ${purpose}`);
       }

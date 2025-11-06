@@ -7,17 +7,17 @@ export class Offset extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
 
-//   @Prop({ type: [Types.ObjectId], ref: 'Transaction' })
-//   transactions: Types.ObjectId[];
-
   @Prop({ type: Types.ObjectId, ref: 'CarbonProject', required: true })
-  projectId: CarbonProject;
+  projectId: Types.ObjectId;
 
   @Prop({ required: true })
-  txHash: string;
+  amount: number;
 
-  @Prop({ default: 'pending' })
-  status: 'pending' | 'confirmed' | 'failed';
+  @Prop()
+  currency: string;
+
+  @Prop()
+  offsetAmount: number;
 }
 
 export const OffsetSchema = SchemaFactory.createForClass(Offset);
