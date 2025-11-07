@@ -15,7 +15,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { SavingsModule } from './modules/savings/savings.module';
 import celoConfig from './config/celo.config';
 import aiConfig from './config/ai.config';
-import { BlockchainModule } from './modules/blockchain/blockchain.module';
+import { OffsetModule } from './modules/offset/offset.module';
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { BlockchainModule } from './modules/blockchain/blockchain.module';
     ProjectsModule,
     TransactionsModule,
     AiModule,
-    BlockchainModule,
     SavingsModule,
+    OffsetModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig, mongoConfig, aiConfig, celoConfig],
