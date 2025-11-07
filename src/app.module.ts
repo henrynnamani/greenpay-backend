@@ -10,10 +10,12 @@ import { z } from 'zod';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { AiModule } from './modules/ai/ai.module';
-import aiConifg from './config/ai.config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { SavingsModule } from './modules/savings/savings.module';
+import celoConfig from './config/celo.config';
+import aiConfig from './config/ai.config';
+import { OffsetModule } from './modules/offset/offset.module';
 
 @Module({
   imports: [
@@ -23,9 +25,10 @@ import { SavingsModule } from './modules/savings/savings.module';
     TransactionsModule,
     AiModule,
     SavingsModule,
+    OffsetModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [jwtConfig, mongoConfig, aiConifg],
+      load: [jwtConfig, mongoConfig, aiConfig, celoConfig],
       validate: (config) => {
         const parsed = envSchema.safeParse(config);
         if (!parsed.success) {

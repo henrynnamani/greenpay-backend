@@ -9,11 +9,11 @@ export class CarbonProject extends Document {
   @Prop()
   description: string;
 
-  @Prop({ required: true })
-  pricePerTon: number;
+  @Prop()
+  impact: string;
 
-  //   @Prop({ required: true })
-  //   imageUrl: string;
+  @Prop({ required: false, default: 0 })
+  contributors: number;
 
   @Prop({ required: false, default: true })
   active: boolean;

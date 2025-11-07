@@ -10,6 +10,10 @@ export const envSchema = z.object({
   OPENAI_API_KEY: z.string(),
   COHERE_API_KEY: z.string(),
   CELO_NODE_URL: z.string(),
+  RPC_URL: z.string(),
+  PRIVATE_KEY: z.string(),
+  MANAGER_CONTRACT: z.string(),
+  TOKEN_CONTRACT: z.string(),
 });
 
 export type EnvSchema = z.infer<typeof envSchema>;

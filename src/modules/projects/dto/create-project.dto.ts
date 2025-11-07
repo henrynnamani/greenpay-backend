@@ -9,7 +9,7 @@ export class CreateProjectDto {
   @IsNotEmpty()
   description: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  pricePerTon: number;
+  impact: string;
 }
